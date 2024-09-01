@@ -1,0 +1,48 @@
+"0",""
+"0","# Charger le package VIM"
+"0","if (!require(dplyr)) install.packages(""VIM"")"
+"2","Le chargement a nécessité le package : dplyr
+"
+"2","
+Attachement du package : ‘dplyr’
+
+"
+"2","Les objets suivants sont masqués depuis ‘package:stats’:
+
+    filter, lag
+
+"
+"2","Les objets suivants sont masqués depuis ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(VIM)"
+"2","Le chargement a nécessité le package : colorspace
+"
+"2","Le chargement a nécessité le package : grid
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","VIM is ready to use.
+
+"
+"2","Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues
+"
+"2","
+Attachement du package : ‘VIM’
+
+"
+"2","L'objet suivant est masqué depuis ‘package:datasets’:
+
+    sleep
+
+"
+"0","# Utilisation de la fonction aggr() pour visualiser les valeurs manquantes"
+"0","aggr(decathlon_data, col=c('navyblue','yellow'), numbers=TRUE, sortVars=TRUE, "
+"0","     labels=names(decathlon_data), cex.axis=.7, gap=3, ylab=c(""Histogram of missing data"",""Pattern""))"
+"1","
+ Variables sorted by number of missings: 
+"

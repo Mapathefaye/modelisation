@@ -1,0 +1,3 @@
+"0","# Add connected line segments to the plot"
+"0","lines(x = 1:nrow(valeurspropres), valeurspropres[, 2], "
+"0","      type=""b"", pch=19, col = ""red"")"

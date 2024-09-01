@@ -1,0 +1,5 @@
+"0","barplot(valeurspropres[, 2], names.arg=1:nrow(valeurspropres), "
+"0","       main = ""Pourcentage de la variance expliquée par chaque composante"","
+"0","       xlab = ""Composantes principales"","
+"0","       ylab = ""Pourcentage de variance expliquée"","
+"0","       col =""steelblue"")"

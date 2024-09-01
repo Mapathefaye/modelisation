@@ -1,0 +1,9 @@
+"0","# créer un histo pour chaque variable quantitative
+for(var in names(data)[var_quantitatives]) {
+  print(ggplot(data, aes_string(x=var))+
+          geom_histogram(bins=30, fill=""blue"", cotor=""black"")+
+          theme_minimal()+
+          labs(title = paste(""histogramme de"", var), x = var, y = ""fréquence""))
+}
+"
+"2","Avis : [38;5;232mIgnoring unknown parameters: `cotor`[39m"

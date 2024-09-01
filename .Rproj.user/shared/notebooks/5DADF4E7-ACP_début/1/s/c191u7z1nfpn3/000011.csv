@@ -1,0 +1,6 @@
+"0","# Créer un barplot pour la variable ""Compétition""
+creer_barplot_proportion(data, ""Compétition"")
+"
+"2","Error in data %>% count(.data[[column_name]]) %>% mutate(Proportion = n/sum(n)) : 
+  could not find function ""%>%""
+"

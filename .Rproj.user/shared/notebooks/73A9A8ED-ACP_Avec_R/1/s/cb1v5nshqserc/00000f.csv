@@ -1,0 +1,4 @@
+"0","#Utilisation du package factoextra"
+"0","# Créer le graphique des valeurs propres"
+"0","fviz_eig(resultat_acp, addlabels = TRUE)"
+"0",""

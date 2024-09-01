@@ -1,0 +1,175 @@
+
+  Clustering spectral en génétique des populations
+
+
+        masedki.github.io
+
+
+        jeu. 28 nov. 2019
+
+
+    1. Jeu de données
+
+L’étude de la diversité génétique humaine présente un intérêt pour
+divers domaines allant de la compréhension génétique des maladies aux
+applications en criminologie. La détection de sous-populations ou
+clusters est la clé pour la reconstruction de l’histoire démographique
+d’une population. On s’intéresse au regroupement en sous-populations
+(clustering) du jeu de données /Human Genome Diversity Panel/ disponible
+sur le site http://www.cephb.fr/hgdp/ <http://www.cephb.fr/hgdp/>. Ce
+jeu de données est composé de 10431043 individus et 660918660918
+marqueurs SNP (bialléliques). L’accès à ce jeu de données se fait via
+l’installation du package comme suit
+
+|install.packages("HGDP.CEPH", repos="https://genostats.github.io/R/")
+require(HGDP.CEPH)
+# lire données
+filepath <-system.file("extdata", "hgdp_ceph.bed", package="HGDP.CEPH")
+x <- read.bed.matrix(filepath)
+# données SNP et individus
+head(x@snps)
+head(x@ped)|
+
+
+    2. Analyse en composantes principales
+
+L’analyse en composantes principales est communément utilisée pour
+visualiser des groupes dans un nuage de points. Avant d’appliquer une
+telle procédure, nous avons besoin de normaliser les données. Rappelons
+que les données sont sous forme d’une matrice de tailles (n,p)(n,p) où
+nn est le nombre d’individus observés et pp le nombre de marqueurs
+observés pour chaque individu. Chaque marqueur est un SNP, qui possède
+deux allèles possibles. Ainsi, le génotype d’un marqueur particulier
+peut être codé sur la base du nombre d’allèles (0, 1 ou 2).
+
+ 1.
+
+    Rappeler l’espérance et la variance d’un marqueur XjXj observé sous
+    l’équilibre de Hardy-Weinberg. Proposer deux estimateurs intuitifs
+    de ces deux quantités.
+
+ 2.
+
+    Le package propose une fonction qui automatise le calcul des
+    estimateurs de ces deux quantités sur la matrice de données.
+    Vérifier que les estimateurs calculés par cette fonction sur la
+    première colonne de la matrice de données correspondent aux
+    estimateurs proposés en réponse à la question précédente.
+
+On note XX la matrice de données obtenue après standardisation des
+colonnes du jeu de données. La décomposition en valeurs singulière de XX
+donnée par
+
+X=UΓVt
+X=UΓVt
+
+où ΓΓ est une matrice diagonale formée par les valeurs dites /
+sigulières/ γ1,γ2,…γ1,γ2,….
+
+On note SS, la matrice de covariance empirique des marqueurs de taille
+p×pp×p définie par
+
+S=1n−1XtX
+S=1n−1XtX
+
+Les vecteurs propres v1,v2,…v1,v2,… associés aux valeurs propres λ1≥λ2≥…
+λ1≥λ2≥… où λi=γ2iλi=γi2 sont les composantes principales^1 <#fn1>. En
+génétique des populations où n<pn<p, (Cavalli-Sforza, Menozzi, and
+Piazza 1994) se sont intéressés à la matrice dite /duale/ de taille
+n×nn×n donnée par
+H=1pXXt,
+H=1pXXt,
+
+pour mettre en place une analyse en composantes principales. On notera
+ξiξi les valeurs propres associées à HH et uiui ses vecteurs propres.
+
+ 3.
+
+    Rappeler le lien entre les éléments propres des matrices SS et HH.
+
+ 4.
+
+    La fonction du package permet le calcul de la matrice HH. À l’aide
+    de la fonction , restreindre l’étude aux snp autosomaux avec une
+    fréquence de l’allèle mineur strictement supérieure à 0.050.05.
+
+ 5.
+
+    Calculer les vecteurs propres associés à la matrice HH à l’aide de
+    la fonction . Représenter les individus du jeu de données dans le
+    premier plan factoriel. Colorier chaque point en fonction de sa
+    région indiqué dans .
+
+ 6.
+
+    Regrouper le jeu de données en 77 groupes à l’aide d’un sur les deux
+    premiers vecteurs propres. Comparer la partition obtenue à la
+    partition à l’aide d’une matrice de confusion. Évaluer la
+    correspondance entre les deux partitions avec la fonction du package .
+
+
+    3. Clustering spectral
+
+Pour introduire le sujet nous avons besoin du vocabulaire de la théorie
+des graphes. Pour nn points, on définit un graphe GG de sommets {1,…,n}
+{1,…,n} On associe à GG une matrice WW qui décrit la force de lien entre
+ses sommets : les couples de sommets (i,j)(i,j) correspondant à une
+grande valeur wi,jwi,j sont fortement connectés. Les entrées nulles
+wi,j=0wi,j=0 indiquent les sommets non-connectés de GG. Ce type de
+modélisation est d’une grande flexibilité par la variété de matrices de
+similarité qu’on peut définir sur un jeu de données à condition que
+celle-ci soit symétrique et à valeurs positives. L’idée du clustering
+spectral est de détecter les composantes connexes du graphe à l’aide du
+spectre d’un Laplacien discret. Il existe différentes manières de
+calculer un Laplacien discret sur un graphe. Nous allons faire appel à
+la version dite /normalisée/ donnée par
+
+L=D−12LD−12,
+L=D−12LD−12,
+
+où L=D−WL=D−W et D=diag(d1,…,dn)D=diag(d1,…,dn) est la matrice diagonale
+où di=∑nj=1wijdi=∑j=1nwij correspond au degré du sommet ii.
+
+L’article de (Lee, Luca, and Roeder 2010) propose d’adopter l’approche
+du clustering spectral dans le contexte de génétique des populations.
+Cette approche permet une détection automatique du nombre de sous-
+populations ainsi que le clustering des individus.
+
+ 7.
+
+    Résumer l’idée à l’origine de l’heuristique du choix du nombre de
+    vecteurs propres du Laplacien ainsi que le nombre de sous-populations.
+
+ 8.
+
+    Reprendre le jeu de données restreint aux snp autosomaux avec une
+    fréquence de l’allèle mineur strictement supérieure à 0.050.05.
+    Implémenter la procédure décrite dans (Lee, Luca, and Roeder 2010,
+    Algorithm 1 (de 1: à 7:))^2 <#fn2> en appliquant un algorithme des
+    sur la représentation des données obtenues. Expliciter les étapes
+    ainsi que le résultat obtenu. Comparer la partition obtenue à la
+    partition à l’aide d’un matrice de confusion. Évaluer la
+    correspondance entre les deux partitions avec la fonction du
+    package . Conclure.
+
+Cavalli-Sforza, Luigi Luca, Paolo Menozzi, and Alberto Piazza. 1994. /
+The History and Geography of Human Genes/. Book. Princeton, N.J. :
+Princeton University Press.
+
+Lee, Ann B., Diana Luca, and Kathryn Roeder. 2010. “A Spectral Graph
+Approach to Discovering Genetic Ancestry.” /Ann. Appl. Stat./ 4 (1):
+179–202. https://doi.org/10.1214/09-AOAS281 <https://doi.org/10.1214/09-
+AOAS281>.
+
+------------------------------------------------------------------------
+
+ 1.
+
+    La matrice SS correspond à la matrice de corrélation lorsque les
+    colonnes de XX sont centrées et réduites (standardisées).↩︎ <#fnref1>
+
+ 2.
+
+    Attention: la définition du Laplacien normalisé à l’étape (3:) est
+    erronée . Utiliser la définition donnée dans cet énoncé.↩︎ <#fnref2>
+

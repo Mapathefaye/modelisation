@@ -1,0 +1,9 @@
+"0","## créer des boxplot
+for(var in names(data)[var_quantitatives]) {
+  print(ggplot(data, aes_string(x=factor(1), y=var))+
+          geom_boxplot(bins=30, fill=""blue"", cotor=""black"")+
+          theme_minimal()+
+          labs(title = paste(""boxplot de"", var), x = """", y = ""var""))
+}
+"
+"2","Avis : [38;5;232mIgnoring unknown parameters: `bins` and `cotor`[39m"

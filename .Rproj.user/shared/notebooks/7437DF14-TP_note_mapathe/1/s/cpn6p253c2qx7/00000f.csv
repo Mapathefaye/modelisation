@@ -1,0 +1,6 @@
+"0","# Sous-ensemble des données pour inclure uniquement les variables incluses dans le modèle"
+"0","donnees_modele <- poules[, c(""pav_ab"", ""p_ga"", ""p_coeur"", ""p_foie"", ""p_sang"", ""p_plum"")]"
+"0",""
+"0","# Représentation par paire"
+"0","pairs(donnees_modele)"
+"0",""

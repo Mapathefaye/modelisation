@@ -1,0 +1,7 @@
+"0","# utilisation de la fonction aggr() pour visualiser les données manquantes
+aggr(data, col =c(""blue"", ""yellow""), numbers=TRUE, sortVars=TRUE,
+     labels=names(data), cex.axis=0.7, gap=3, ylab=c(""histogramme of missing data"", ""pattern""))
+"
+"1","
+ Variables sorted by number of missings: 
+"

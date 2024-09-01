@@ -1,0 +1,7 @@
+install.packages("Factoshiny")
+library(Factoshiny)
+velib <- read.table(file = "velib5jours.txt", sep = " ")
+res <- Factoshiny(decathlon_data)
+res.PCA<-PCA(decathlon_data,quali.sup=c(13),quanti.sup=c(11,12),graph=FALSE)
+plot.PCA(res.PCA,choix='var',title="Graphe des variables de l'ACP")
+plot.PCA(res.PCA,title="Graphe des individus de l'ACP")

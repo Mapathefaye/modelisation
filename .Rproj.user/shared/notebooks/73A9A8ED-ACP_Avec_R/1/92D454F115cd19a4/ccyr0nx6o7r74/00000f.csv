@@ -1,0 +1,7 @@
+"0","# Utilisation de la fonction aggr() pour visualiser les valeurs manquantes
+aggr(decathlon_data, col=c('navyblue','yellow'), numbers=TRUE, sortVars=TRUE, 
+     labels=names(decathlon_data), cex.axis=.7, gap=3, ylab=c(""Histogram of missing data"",""Pattern""))
+"
+"1","
+ Variables sorted by number of missings: 
+"

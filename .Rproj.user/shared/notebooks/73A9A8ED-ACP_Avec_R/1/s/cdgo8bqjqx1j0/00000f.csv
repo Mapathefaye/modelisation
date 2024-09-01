@@ -1,0 +1,11 @@
+"0","# Créer un histogramme pour chaque variable quantitative
+for (var in names(decathlon_data)[vars_quantitatives]) {
+  print(ggplot(decathlon_data, aes_string(x = var)) +
+          geom_histogram(bins = 30, fill = ""blue"", color = ""black"") +
+          theme_minimal() +
+          labs(title = paste(""Histogramme de"", var), x = var, y = ""Fréquence""))
+}
+"
+"2","Avis : `aes_string()` was deprecated in ggplot2 3.0.0.
+Please use tidy evaluation idioms with `aes()`. 
+See also `vignette(""ggplot2-in-packages"")` for more information."

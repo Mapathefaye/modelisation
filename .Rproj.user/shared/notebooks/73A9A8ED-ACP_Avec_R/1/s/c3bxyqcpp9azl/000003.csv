@@ -1,0 +1,7 @@
+"0","# Add connected line segments to the plot
+lines(x = 1:nrow(valeurspropres), valeurspropres[, 2], 
+      type=""b"", pch=19, col = ""red"")
+"
+"2","Erreur dans plot.xy(xy.coords(x, y), type = type, ...) : 
+  plot.new has not been called yet
+"

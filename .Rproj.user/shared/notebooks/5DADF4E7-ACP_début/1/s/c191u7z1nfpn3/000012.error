@@ -1,0 +1,1 @@
+{"frames":[{"func":"creer_barplot_proportion(data, \"Compétition\")","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in data %>% count(.data[[column_name]]) %>% mutate(Proportion = n/sum(n)) : \n  could not find function \"%>%\"\n"}

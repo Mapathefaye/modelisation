@@ -1,0 +1,7 @@
+# dictionnaire des données
+#Tribe : famille de l'antilope
+#Species : espèce de l'antilope
+#Mass_(kg) : poids de l'antilope
+#Group_size : taille du groupe d'appartenance de l'antilope
+#Diet_class : classe indiquant le régime alimentaire de l'antilope
+#Antipredator_class : classe indiquant le comportement de prédation de la classe A(fuite) B(se cache)

@@ -1,0 +1,24 @@
+"0","library(VIM)
+"
+"2","Le chargement a nécessité le package : colorspace
+"
+"2","Le chargement a nécessité le package : grid
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","VIM is ready to use.
+
+"
+"2","Suggestions and bug-reports can be submitted at: https://github.com/statistikat/VIM/issues
+"
+"2","
+Attachement du package : ‘VIM’
+
+"
+"2","L'objet suivant est masqué depuis ‘package:datasets’:
+
+    sleep
+
+"

@@ -1,0 +1,139 @@
+---
+title: "ACP"
+format: html
+editor: visual
+---
+
+## Quarto
+
+**Etape1: chargement et description des données**
+
+```{r}
+# importer les données
+data = read.table("decathlon.txt", header = T, sep = "\t")
+head(data)
+
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+## renommer les colonnes
+colnames(data) = c(
+  "Course100m",
+  "SautEnLongueur",
+  "lancerDePoids",
+  "SautEnHauteur",
+  "Course400m",
+  "course110mHaies",
+  "LancerDeDisque",
+  "SautALaPerche",
+  "LancerDeJavelot",
+  "Course1500m",
+  "Classement",
+  "Points",
+  "Compétition"
+)
+head(data)
+```
+
+```{r}
+summary(data)
+```
+
+Analyse des valeurs manquantes
+
+```{r}
+# fonction pour calculer la proportion des valeurs manquantes
+proportion_valeurs_manquantes = function(data) {
+  # calcul du nombre de valeurs manquantes par colonne
+  nb_valeurs_manquantes = sapply(data, function(x) sum(is.na(x)))
+  # calcul la proportion de valeurs manquantes
+  proportion_manquantes = nb_valeurs_manquantes/nrow(data)
+  # créer un data frame pour le résultat
+  resultat = data.frame(nobre=nb_valeurs_manquantes,proportion=proportion_manquantes)
+  return(resultat)
+}
+resultat = proportion_valeurs_manquantes(data)
+resultat
+```
+
+```{r}
+# package pour travailler les val manquantes*
+# charger le package VIM
+install.packages("VIM")
+library(VIM)
+
+# utilisation de la fonction aggr() pour visualiser les données manquantes
+aggr(data, col =c("blue", "yellow"), numbers=TRUE, sortVars=TRUE,
+     labels=names(data), cex.axis=0.7, gap=3, ylab=c("histogramme of missing data", "pattern"))
+
+
+```
+
+Description des variables quantitatives
+
+```{r}
+# charger le ggplot2
+library(ggplot2)
+# identifier les cols contenant des variables quantiatives
+var_quantitatives = sapply(data, is.numeric)
+
+# créer un histo pour chaque variable quantitative
+for(var in names(data)[var_quantitatives]) {
+  print(ggplot(data, aes_string(x=var))+
+          geom_histogram(bins=30, fill="blue", cotor="black")+
+          theme_minimal()+
+          labs(title = paste("histogramme de", var), x = var, y = "fréquence"))
+}
+```
+
+```{r}
+## créer des boxplot
+for(var in names(data)[var_quantitatives]) {
+  print(ggplot(data, aes_string(x=factor(1), y=var))+
+          geom_boxplot(bins=30, fill="blue", cotor="black")+
+          theme_minimal()+
+          labs(title = paste("boxplot de", var), x = "", y = "var"))
+}
+```
+
+```{r}
+# Fonction pour créer un barplot en proportions
+creer_barplot_proportion <- function(data, column_name) {
+  # Calculer les proportions
+  proportions <- data %>%
+    count(.data[[column_name]]) %>%
+    mutate(Proportion = n / sum(n))
+
+  # Créer le barplot
+  ggplot(proportions, aes_string(x = column_name, y = "Proportion", fill = column_name)) +
+    geom_bar(stat = "identity") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    labs(x = column_name, y = "Proportion (%)") +
+    theme_minimal()
+}
+
+# Créer un barplot pour la variable "Compétition"
+creer_barplot_proportion(data, "Compétition")
+```
+
+```{r}
+# Relation bivariées 
+library(corrplot)
+donnees_quantiative = data[,var_quantitatives]
+
+# calcul de la matrice de corrélation
+matrice_correlation  = cor(donnees_quantiative)
+## créér un heatmap de corrélation 
+corrplot(matrice_correlation, method = "color", type = "upper", order = "hclust",
+         tl.col = "black", tl.srt = 45, 
+         addCoef.col = "black", # Couleur des coefficients
+         cl.pos = "n", # Position de la légende de couleur
+         cl.cex = 1.2, # Taille de la légende de couleur
+         addCoefasPercent = TRUE, # Afficher les coefficients en pourcentage
+         number.cex = 0.8) # Taille des chiffres des coefficients
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

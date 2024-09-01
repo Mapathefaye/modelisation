@@ -1,0 +1,7 @@
+"0",""
+"0","# Créer le graphique du cercle de corrélation"
+"0","fviz_pca_var(resultat_acp, "
+"0","             col.var = ""cos2"", # Utiliser la qualité de représentation (cos2) pour la couleur"
+"0","             gradient.cols = c(""#00AFBB"", ""#E7B800"", ""#FC4E07""), # Palette de couleurs"
+"0","             repel = TRUE, # Éviter le chevauchement des étiquettes"
+"0","             title = ""Cercle de Corrélation des Variables"")"

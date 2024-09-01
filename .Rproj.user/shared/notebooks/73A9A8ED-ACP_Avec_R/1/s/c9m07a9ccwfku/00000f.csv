@@ -1,0 +1,8 @@
+"0","# Créer un boxplot pour chaque variable quantitative"
+"0",""
+"0","for (var in names(decathlon_data)[vars_quantitatives]) {"
+"0","  print(ggplot(decathlon_data, aes_string(x = factor(1), y = var)) +"
+"0","          geom_boxplot(fill = ""skyblue"", color = ""darkblue"") +"
+"0","          theme_minimal() +"
+"0","          labs(title = paste(""Boxplot de"", var), x = """", y = var))"
+"0","}"

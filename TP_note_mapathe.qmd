@@ -1,0 +1,209 @@
+---
+title: "TP_note_Mapathe"
+format: html
+editor: visual
+---
+
+
+Partie1 : Importation et description des données
+
+```{r}
+```
+
+
+```{r}
+# Chargement des données 
+poules <- read.table(file = "poules.txt", header = T)
+# Afficher les premières ligne du jeu de données
+head(poules)
+
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: true
+# Afficher les informatons sur les variables
+str(poules)
+```
+```{r}
+# résumé du jeu de données
+summary(poules)
+```
+Analyse des valeurs manquantes
+
+```{r}
+# Fonction pour calculer la proportion de valeurs manquantes par variable
+proportion_valeurs_manquantes <- function(data) {
+    # Calcul du nombre de valeurs manquantes par colonne
+  nb_valeurs_manquantes <- sapply(data, function(x) sum(is.na(x)))
+
+  # Calcul de la proportion de valeurs manquantes
+  proportion_manquantes <- nb_valeurs_manquantes / nrow(data)
+
+  # Création d'un dataframe pour le résultat
+  resultat <- data.frame(Nombre = nb_valeurs_manquantes, Proportion = proportion_manquantes)
+
+  return(resultat)
+}
+
+# Utilisation de la fonction avec la base de données
+resultat <- proportion_valeurs_manquantes(poules)
+
+# Affichage du résultat
+resultat
+```
+Il n'y pas de données manquantes. Le jeu de données est propre.
+
+Despcription des variables quantitatives
+
+```{r}
+library(ggplot2)
+library(gridExtra)
+
+# Identifier les colonnes quantitatives
+vars_quantitatives <- sapply(poules, is.numeric)
+
+# Exclure les variables id et Temperature
+vars_exclues <- c("id", "Temperature")
+
+# Initialiser une liste pour stocker les graphiques
+plots <- list()
+
+# Créer un histogramme pour chaque variable quantitative
+for (var in names(poules)[vars_quantitatives]) {
+  if (!(var %in% vars_exclues)) {
+    p <- ggplot(poules, aes_string(x = var)) +
+            geom_histogram(bins = 30, fill = "blue", color = "black") +
+            theme_minimal() +
+            labs(title = paste("Histogramme de", var), x = var, y = "Fréquence")
+    plots[[var]] <- p
+  }
+}
+
+# Afficher les graphiques côte à côte
+grid.arrange(grobs = plots, ncol = 2)
+
+
+```
+Les variables sont quantitatives et modélisables par des lois normales.
+Deux variable quantitative à savoir le genotype (3 modalités) et la température (car nous n'avons que deux modalités), que l’on peut modéliser par une loi de Bernoulli.
+
+```{r}
+barplot(table(poules$genotype))
+```
+Les trois différents génotype sont à des proportions identiques
+
+```{r}
+barplot(table(poules$Temperature))
+```
+Le nombre de poules élevés à une température de 22°C est plus important.
+
+ETAPE2 : ANALYSE DES CORRELATIONS ENTRE VARIABLE QANTITATIVES
+```{r}
+# Charger les packages
+library(ggplot2)
+library(corrplot)
+
+
+donnees_quantitatives <- poules[, vars_quantitatives]
+
+
+
+# Calculer la matrice de corrélation
+matrice_correlation <- cor(donnees_quantitatives, use = "complete.obs")
+
+
+# Créer la heatmap de corrélation avec des coefficients plus visibles
+corrplot(matrice_correlation, method = "color", type = "upper", order = "hclust",
+         tl.col = "black", tl.srt = 45, 
+         addCoef.col = "black", # Couleur des coefficients
+         cl.pos = "n", # Position de la légende de couleur
+         cl.cex = 1.2, # Taille de la légende de couleur
+         addCoefasPercent = TRUE, # Afficher les coefficients en pourcentage
+         number.cex = 0.8) # Taille des chiffres des coefficients
+
+   
+```
+- La température environnementale (Temperature) présente une corrélation négative modérée avec le poids avant abattage (pav_ab), indiquant que des températures plus élevées pourraient être associées à des poids avant abattage plus faibles.
+
+- Le poids avant abattage (pav_ab) est fortement corrélé avec le poids du gras abdominal (p_ga), le poids du cœur (p_coeur) et le poids du foie (p_foie), ce qui suggère que ces variables sont importantes pour prédire le poids avant abattage.
+
+- Le poids du cœur (p_coeur) présente une corrélation modérée avec le poids du sang (p_sang), ce qui peut indiquer une relation physiologique entre ces deux variables.
+
+- D'autres relations de corrélation moins prononcées peuvent également être observées entre d'autres variables.
+    
+
+QUESTION : ON CHERCHE A EXPLIQUER LE POIDS AVANT ABATAGE EN FONCTION DE p_ga, p_coeur, p_sang...
+nous allons choisir le poids avant abattage (pav_ab) comme variable réponse, car il s'agit d'une mesure importante dans le contexte de l'élevage de poules
+
+
+```{r}
+# Sous-ensemble des données pour inclure uniquement les variables incluses dans le modèle
+donnees_modele <- poules[, c("pav_ab", "p_ga", "p_coeur", "p_foie", "p_sang", "p_plum")]
+
+# Représentation par paire
+pairs(donnees_modele)
+
+```
+La représentation par pair des co_variables nous pouce à modéliser la relation entre les variables par un modèle de régression linéaire
+
+```{r}
+modele_lm <- lm(pav_ab ~ p_ga + p_coeur + p_foie + p_sang + p_plum, data = poules)
+summary(modele_lm)
+```
+Les coefficients estimés indiquent l'effet de chaque variable explicative sur le poids avant abattage. Par exemple, pour chaque unité d'augmentation dans le poids du gras abdominal, le poids avant abattage augmente en moyenne de 3.0201 unités.Toutes les variables ont des p-values inférieures à 0.05, ce qui indique une relation significative avec le poids avant abattage.Le coefficient de détermination multiple ajusté (R² ajusté) est de 0.8052, ce qui signifie que les variables incluses dans le modèle expliquent ensemble environ 80,52% de la variation observée dans le poids avant abattage. Le F-statistic est de 89.48 avec une p-value pratiquement nulle, ce qui indique que le modèle dans son ensemble est statistiquement significatif.
+
+A présent nous allons vérifier la véracité de cette interprétation du modèle en vérifiant si ce dernier respecte la linéarité, l'homocédasticité,la non autocorrélation, l'absence de multicolinéarité, la nullité de l'espérance des erreurs, et la normalité.
+Concernant l'hypothèse de la linéarité, la réponse est oui car les graphe pairs paris le démontre clairement.
+```{r}
+# nullité de l'espérance des erreurs? réponse OUi
+moyenne_esperance <- mean(residuals(modele_lm))
+moyenne_esperance
+
+# Absence d'autocorrélation
+##install.packages("zoo")
+library(lmtest)
+
+durbin_test <- dwtest(modele_lm)
+durbin_test
+```
+la p_valeur du test de Durbin-Watson est supérieur à 0.05 donc on ne rejete pas Ho qui stipule qu'il pas d'autocorélation. 
+```{r}
+# Homocédasticité
+library(ggplot2)
+
+# Calcul des résidus
+residus <- residuals(modele_lm)
+
+# Création du data frame pour ggplot
+data <- data.frame(Prediction = predict(modele_lm), Residus = residus)
+
+# Création du graphique avec ggplot
+ggplot(data, aes(x = Prediction, y = Residus)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Homoscédasticité des résidus",
+       x = "Valeurs prédites",
+       y = "Résidus")
+
+```
+Le graphe des résidus en fonction des valeurs prédictes n'a de forme particulière ce qui confirme l'homocédasticité des variables.
+```{r}
+# Normalité?
+# Création du data frame pour ggplot
+data <- data.frame(Residus = residus)
+
+# Création du graphique avec ggplot
+ggplot(data, aes(sample = Residus)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(title = "QQ plot des résidus",
+       x = "Quantiles théoriques",
+       y = "Quantiles observés")
+```
+Le qqplot montre que la majeur partie des points sont sur la droite de Henri. Par contre aux extrémité, les quantiles observés s'éloignent des quantiles théoriques.A mon avis la normalité des résidus est un peu métisée. Cependant, il serait important d'examiner attentivement la nature de ces écarts et d'évaluer s'ils sont significatifs ou non pour l'interprétation du modèle. Des actions correctives telles que l'identification et le traitement des outliers, l'exploration de transformations variables ou l'ajustement du modèle peuvent être nécessaires pour améliorer la normalité des résidus.
+
+CONLUSION:
+Bien que le modèle de régression linéaire multiple semble expliquer une grande partie de la variance dans le poids avant abattage et que les coefficients des co-variables explicatives sont tous significatifs, les violations potentielles de l'hypothèse de normalité des résidus suggèrent que le modèle pourrait être amélioré ou que d'autres analyses sont nécessaires pour une interprétation plus robuste.
+

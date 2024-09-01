@@ -1,0 +1,8 @@
+"0","# Définir l'URL du fichier"
+"0","#url <- ""https://raw.githubusercontent.com/LeCoinStat/LeCoinStat/main/ACPAvecR/data#/decathlon.txt"""
+"0",""
+"0","# Importer les données"
+"0","decathlon_data <- read.table(""decathlon.txt"", header = TRUE, sep = ""\t"")"
+"0",""
+"0","# Afficher les premières lignes pour vérifier"
+"0","head(decathlon_data)"

@@ -1,0 +1,2 @@
+"0","# Contributions of variables to PC2"
+"0","fviz_contrib(resultat_acp, choice = ""var"", axes = 2, top = 10)"

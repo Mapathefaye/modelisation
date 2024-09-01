@@ -1,0 +1,23 @@
+"0","# Installer les packages nécessaires si ce n'est pas déjà fait"
+"0","if (!require(ggplot2)) install.packages(""ggplot2"")"
+"2","Le chargement a nécessité le package : ggplot2
+"
+"2","Keep up to date with changes at https://tidyverse.org/blog/
+"
+"0","# Charger les packages"
+"0","library(ggplot2)"
+"0","# Identifier les colonnes quantitatives"
+"0","vars_quantitatives <- sapply(decathlon_data, is.numeric)"
+"0",""
+"0",""
+"0",""
+"0","# Créer un histogramme pour chaque variable quantitative"
+"0","for (var in names(decathlon_data)[vars_quantitatives]) {"
+"0","  print(ggplot(decathlon_data, aes_string(x = var)) +"
+"0","          geom_histogram(bins = 30, fill = ""blue"", color = ""black"") +"
+"0","          theme_minimal() +"
+"0","          labs(title = paste(""Histogramme de"", var), x = var, y = ""Fréquence""))"
+"0","}"
+"2","Avis : `aes_string()` was deprecated in ggplot2 3.0.0.
+Please use tidy evaluation idioms with `aes()`. 
+See also `vignette(""ggplot2-in-packages"")` for more information."
